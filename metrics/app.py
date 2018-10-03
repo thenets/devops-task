@@ -19,14 +19,17 @@ def say_hello(name):
 @app.route("/metrics/cpu")
 def metrics_cpu():
     cpu = {}
-    cpu['per_cpu'] = psutil.cpu_percent(interval=1, percpu=True)
+    cpu['per_cpu'] = psutil.cpu_percent(interval=1, percpu=True)._asdict()
     cpu['total'] = statistics.median(cpu['per_cpu'])
     return json.dumps(cpu)
 
 
 @app.route("/metrics/ram")
 def metrics_ram():
-    pass
+    memory = {}
+    memory['virtual'] = psutil.virtual_memory()._asdict()
+    memory['swap'] = psutil.swap_memory()._asdict()
+    return json.dumps(memory)
 
 
 @app.route("/metrics/disk")
