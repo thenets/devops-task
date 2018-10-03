@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from flask import Flask
+import psutil, statistics, json
 
 app = Flask(__name__)
 
@@ -17,7 +18,10 @@ def say_hello(name):
 
 @app.route("/metrics/cpu")
 def metrics_cpu():
-    pass
+    cpu = {}
+    cpu['per_cpu'] = psutil.cpu_percent(interval=1, percpu=True)
+    cpu['total'] = statistics.median(cpu['per_cpu'])
+    return json.dumps(cpu)
 
 
 @app.route("/metrics/ram")
