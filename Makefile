@@ -6,5 +6,6 @@ build:
 test-shell:
 	docker run -it --rm \
 		-v $(PWD):/app \
+		-v /proc:/proc_host:ro \
 		-p 5000:5000 \
 		$(IMAGE_TAG) bash
