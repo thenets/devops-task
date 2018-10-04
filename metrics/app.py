@@ -67,7 +67,25 @@ def metrics_network():
 
 @app.route("/metrics/services")
 def metrics_services():
-    pass
+    
+    import os, re
+
+    process_list = {}
+    proc_host_dir = '/proc_host'
+    for i in os.listdir(proc_host_dir):
+        process_path = os.path.join(proc_host_dir,i)
+        if os.path.isdir(process_path) and i.isdigit():
+            process_list[i] = {}
+            process_list[i]['cmdline'] = open(os.path.join(process_path, "cmdline"), 'r').read().replace("\x00", " ")
+
+            uid_map = open(os.path.join(process_path, "uid_map"), 'r').read().replace("\n","")
+            uid_map = re.sub(' +', ' ', uid_map.replace(" +", " ")).split(" ")
+            process_list[i]['user_id'] = uid_map[1]
+            process_list[i]['group_id'] = uid_map[2]
+            
+            process_list[i]['pid'] = i
+    
+    return jsonify(process_list)
 
 
 if __name__ == '__main__':
