@@ -1,10 +1,9 @@
-IMAGE_TAG=thenets/devops-task:latest
+IMAGE_TAG=thenets/simplemetrics:latest
 
 # Volumes used to access host's kernel data
 REQUIRED_VOLUMES= \
 	-v /proc:/proc_host:ro \
 	-v /sys:/sys_host:ro
-
 
 # Build Docker image
 build:

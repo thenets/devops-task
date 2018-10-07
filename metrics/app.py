@@ -37,6 +37,10 @@ def metrics_services():
 if __name__ == '__main__':
     import os
 
+    if not simplemetrics.hasRequirements():
+        print("Exiting...")
+        exit(1)
+
     # Development server
     # if 'DEBUG' env exist
     if os.environ.get("DEBUG"):

@@ -10,12 +10,38 @@ Returns basic information about the system:
 - Processes running
 """
 
+import psutil, statistics, os
 
-import psutil, statistics
+class bcolors:
+    """Color helper for console output"""
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
 
 
 def hello ():
     return "coffee"
+
+def hasRequirements():
+    success = True
+
+    if not os.path.isdir("/sys_host"):
+        success = False
+        print(bcolors.FAIL + "ERROR: Volume '/sys_host' doesn't exist!" + bcolors.ENDC)
+        
+    if not os.path.isdir("/proc_host"):
+        success = False
+        print(bcolors.FAIL + "ERROR: Volume '/proc_host' doesn't exist!" + bcolors.ENDC)
+
+    if not success:
+        print(bcolors.FAIL + "Check the documentation to fix it." + bcolors.ENDC)
+
+    return success
 
 def cpu ():
     cpu = {}
@@ -42,26 +68,29 @@ def disks ():
     return disks
 
 
-
 def network ():
-    from multiprocessing import Pool
-    p = Pool(processes=20)
-    data = p.map(getNetworkStats, [1])
-    p.close()
-    network = data[0]
-    return network
+    net_interfaces_dir = '/sys_host/class/net/'
 
-def getNetworkStats (nothing):
-    network = {}
-    network['interfaces'] = psutil.net_io_counters(pernic=True)
-    for key, value in network['interfaces'].items():
-        network['interfaces'][key] = value._asdict()
-    # network['connections'] = []
-    # for connection in psutil.net_connections():
-    #     network['connections'].append(connection._asdict())
-    #print("sonho")
-    import json
-    return json.loads(json.dumps(network))
+    interfaces = {}
+
+    # For each network interface
+    for net_interface_name in os.listdir(net_interfaces_dir):
+        net_interface_dir = os.path.join(net_interfaces_dir, net_interface_name)
+
+        if not os.path.isdir(net_interface_dir):
+            continue
+
+        statistics = {}
+
+        # For each statistic
+        statistics_dir = os.path.join(net_interface_dir, "statistics")
+        for statistic_name in os.listdir(statistics_dir):
+            statistics[statistic_name] = open(os.path.join(statistics_dir, statistic_name), 'r').read().replace("\n",'')
+
+        interfaces[net_interface_name] = statistics
+    
+    return interfaces
+        
 
 
 
