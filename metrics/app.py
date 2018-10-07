@@ -5,7 +5,6 @@ import simplemetrics
 
 app = Flask(__name__)
 
-
 @app.route("/")
 def hello_world():
     return simplemetrics.hello()
@@ -32,8 +31,21 @@ def metrics_network():
 
 @app.route("/metrics/services")
 def metrics_services():
-    process_list = simplemetrics.services()
+    process_list = simplemetrics.process()
     return jsonify(process_list)
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    import os
+
+    # Development server
+    # if 'DEBUG' env exist
+    if os.environ.get("DEBUG"):
+        if str(os.environ.get("DEBUG")).lower() == "true":
+            app.run(debug=True, host='0.0.0.0', port=5000)       
+        else:
+            app.run(debug=False, host='0.0.0.0', port=5000)
+    
+    # Production server
+    else:
+        from waitress import serve 
+        serve(app, port=5000)

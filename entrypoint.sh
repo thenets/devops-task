@@ -7,8 +7,5 @@ DIR="$( cd "$( dirname "${BASH_SOURCE}" )" >/dev/null && pwd )"
 cd $DIR
 . venv/bin/activate
 
-# Install Python libs
-pip install -qr requirements.txt
-
 # Start development server
 python metrics/app.py

@@ -59,13 +59,13 @@ def getNetworkStats (nothing):
     # network['connections'] = []
     # for connection in psutil.net_connections():
     #     network['connections'].append(connection._asdict())
-    print("sonho")
+    #print("sonho")
     import json
     return json.loads(json.dumps(network))
 
 
 
-def services ():
+def process ():
 
     import os, re
 

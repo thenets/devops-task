@@ -32,6 +32,10 @@ RUN set -x \
     # Create virtualenv and install libs
     && virtualenv -p python3 venv \
     && . venv/bin/activate \
-    && pip install -r requirements.txt
+    && pip install -r requirements.txt \
+    # Set permissions
+    && chmod +x entrypoint.sh
 
 EXPOSE 5000
+
+CMD ["./entrypoint.sh"]
