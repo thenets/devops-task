@@ -1,0 +1,27 @@
+---
+- hosts: myservers
+  remote_user: root
+  tasks:
+    - name: Install Docker if not installed...
+      shell: |
+        if ! [ -x "$(command -v docker)" ]; then
+            curl -sSL https://get.docker.com | sh
+        fi
+
+    - name: Remove old 'thenets/hostmetrics' container if exist...
+      shell: docker container rm -f hostmetrics || true
+
+    - name: Deploy 'thenets/hostmetrics'
+      shell: |
+        docker pull thenets/hostmetrics
+        docker container run -d \
+          --name hostmetrics \
+          --restart unless-stopped \
+          -p 80:5000 \
+          -v /proc:/proc_host:ro \
+          -v /sys:/sys_host:ro \
+          -e ACCESS_KEY="0q5YeCfBAryPtxTDQfB9O4cr72HrHOUjtK" \
+          -e ACCESS_IPS="127.0.0.1" \
+          thenets/hostmetrics
+        
+  
