@@ -1,9 +1,12 @@
 IMAGE_TAG=thenets/simplemetrics:latest
 
-# Volumes used to access host's kernel data
-REQUIRED_VOLUMES= \
+# - Volumes used to access host's kernel data
+# - Key and IPs allowed
+REQUIRED_PARAMS= \
 	-v /proc:/proc_host:ro \
-	-v /sys:/sys_host:ro
+	-v /sys:/sys_host:ro \
+	-e ACCESS_KEY="0q5YeCfBAryPtxTDQfB9O4cr72HrHOUjtK" \
+	-e ACCESS_IPS="127.0.0.1 172.17.0.1"
 
 # Build Docker image
 build:
@@ -15,7 +18,7 @@ server-development:
 		-e DEBUG=TRUE \
 		-p 5000:5000 \
 		-v $(PWD):/app \
-		${REQUIRED_VOLUMES} \
+		${REQUIRED_PARAMS} \
 		$(IMAGE_TAG)
 
 # Enter inside the container's bash
@@ -24,7 +27,7 @@ shell:
 		-e DEBUG=TRUE \
 		-p 5000:5000 \
 		-v $(PWD):/app \
-		${REQUIRED_VOLUMES} \
+		${REQUIRED_PARAMS} \
 		$(IMAGE_TAG) bash
 
 # Run server in the production mode
@@ -32,5 +35,5 @@ server-production:
 	docker run -it --rm \
 		-p 5000:5000 \
 		-v $(PWD):/app \
-		${REQUIRED_VOLUMES} \
+		${REQUIRED_PARAMS} \
 		$(IMAGE_TAG)

@@ -1,36 +1,55 @@
 # -*- coding: utf-8 -*-
 
-from flask import Flask, jsonify
-import simplemetrics
+from flask import Flask, jsonify, abort
+
+import simplemetrics, auth
 
 app = Flask(__name__)
 
 @app.route("/")
 def hello_world():
-    return simplemetrics.hello()
+    if not auth.validate():
+        abort(401)
+
+    return "I want coffee."
 
 @app.route("/metrics/cpu")
 def metrics_cpu():
+    if not auth.validate():
+        abort(401)
+
     cpu = simplemetrics.cpu()
     return jsonify(cpu)
 
 @app.route("/metrics/ram")
 def metrics_ram():
+    if not auth.validate():
+        abort(401)
+
     memory = simplemetrics.memory()
     return jsonify(memory)
 
 @app.route("/metrics/disk")
 def metrics_disk():
+    if not auth.validate():
+        abort(401)
+        
     disks = simplemetrics.disks()
     return jsonify(disks)
 
 @app.route("/metrics/network")
 def metrics_network():
+    if not auth.validate():
+        abort(401)
+
     network = simplemetrics.network()
     return jsonify(network)
 
 @app.route("/metrics/services")
 def metrics_services():
+    if not auth.validate():
+        abort(401)
+        
     process_list = simplemetrics.process()
     return jsonify(process_list)
 
