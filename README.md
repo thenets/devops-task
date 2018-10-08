@@ -1,5 +1,7 @@
 # docker-hostmetrics
 
+[![Docker Pulls](https://img.shields.io/docker/pulls/thenets/hostmetrics.svg?style=flat-square)](https://hub.docker.com/r/thenets/hostmetrics/) [![Build Status](https://travis-ci.org/thenets/docker-hostmetrics.svg?branch=master)](https://travis-ci.org/thenets/docker-hostmetrics)
+
 Simple metrics from container's host. 
 
 ## 0. Requirements
@@ -24,6 +26,7 @@ Environment Variables:
 
 - `ACCESS_KEY` : If defined, turn this key required during the HTTP requests.
 - `ACCESS_IPS` : If defined, restrict the source connections to those IPs. Each IP most my separated by one space. 
+- `DEBUG` : If defined, run server in development mode. If setted to `true`, enable verbose debug output.
 
 
 ### 1.1. Docker command
@@ -93,10 +96,44 @@ After deploy the server you can access thoses endpoints:
 
 You don't need to pass the `key` if the `ACCESS_KEY` environment variable was not defined.
 
+## Development
+
+To use the `Makefile` your Linux user id most be `1000` and your used most be part of the `docker` group.
+
+Some commands for development:
+
+```bash 
+# Add your user to the Docker group
+# (most restart the computer)
+usermod -aG docker MY_USER_HERE
+
+# Build Docker image
+make build
+
+# Run unit tests
+make unit-test
+
+# Enter in the shell mode (inside the container)
+make shell
+#or
+make shell-root
+
+# Install the libs the dev mode
+make shell
+source ./venv/bin/activate
+pip install -r requirements.txt
+
+# Start servers binding the host files
+make server-development
+make server-production
+
+# Start server reproducing production environment
+make server-test
+```
 
 ### TODO
 
-- Add unit tests.
+- Improve unit tests.
 - Add Docker Compose file.
 - Improve README file with more "How to use" examples.
 - Add comments to the 'simplemetrics.py' lib.
