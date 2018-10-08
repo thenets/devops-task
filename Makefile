@@ -30,6 +30,16 @@ shell:
 		${REQUIRED_PARAMS} \
 		$(IMAGE_TAG) bash
 
+# Enter inside the container's bash as root
+shell-root:
+	docker run -it --rm \
+		-u root \
+		-e DEBUG=TRUE \
+		-p 5000:5000 \
+		-v $(PWD):/app \
+		${REQUIRED_PARAMS} \
+		$(IMAGE_TAG) bash
+
 # Run server in the production mode
 server-production:
 	docker run -it --rm \
@@ -37,3 +47,14 @@ server-production:
 		-v $(PWD):/app \
 		${REQUIRED_PARAMS} \
 		$(IMAGE_TAG)
+
+# Test production mode without mount local volume
+server-test:
+	docker run -it --rm \
+		-p 5000:5000 \
+		${REQUIRED_PARAMS} \
+		$(IMAGE_TAG)
+
+# Run all unit tests
+unit-test:
+	echo "Not implemented yet..."
