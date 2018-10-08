@@ -1,4 +1,4 @@
-IMAGE_TAG=thenets/simplemetrics:latest
+IMAGE_TAG=thenets/hostmetrics:latest
 
 # - Volumes used to access host's kernel data
 # - Key and IPs allowed
