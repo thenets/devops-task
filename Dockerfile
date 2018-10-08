@@ -27,6 +27,7 @@ USER ${USER}
 COPY --chown=1000:1000 ./metrics ${APP_DIR}/metrics
 COPY --chown=1000:1000 requirements.txt ${APP_DIR}/
 COPY --chown=1000:1000 entrypoint.sh ${APP_DIR}/
+COPY --chown=1000:1000 unit-test.sh ${APP_DIR}/
 
 RUN set -x \
     # Create virtualenv and install libs
@@ -34,7 +35,7 @@ RUN set -x \
     && . venv/bin/activate \
     && pip install -r requirements.txt \
     # Set permissions
-    && chmod +x entrypoint.sh
+    && chmod +x entrypoint.sh unit-test.sh
 
 EXPOSE 5000
 

@@ -57,4 +57,7 @@ server-test:
 
 # Run all unit tests
 unit-test:
-	echo "Not implemented yet..."
+	docker run -it --rm \
+		-p 5000:5000 \
+		${REQUIRED_PARAMS} \
+		$(IMAGE_TAG) /app/unit-test.sh
